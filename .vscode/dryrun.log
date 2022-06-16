@@ -1,8 +1,0 @@
-make --dry-run --keep-going --print-directory
-make: Entering directory `/Users/ben/Dev/C/Neural-Network'
-[ -d obj ] || mkdir -p obj
-gcc -c -o obj/test.o src/test.c
-[ -d bin ] || mkdir -p bin
-gcc -o bin/nn src/main.c obj/matrix.o obj/neural.o obj/activation.o obj/image.o obj/test.o
-make: Leaving directory `/Users/ben/Dev/C/Neural-Network'
- 
