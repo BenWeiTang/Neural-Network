@@ -116,14 +116,17 @@ void backPropogate(NeuralNetwork* NN, double* inputs, double* observedValues)
 
     // Compute error of the output layer
     Matrix** layerErrors = malloc(sizeof(Matrix*) * NN->numHiddenLayer);
-    Matrix* dCost = matrixSub(NN->layers[NN->numHiddenLayer-1]->activations, observed);
-    Matrix* dLrelu = copyMatrix(NN->layers[NN->numHiddenLayer-1]->z);
-    matrixApply(dLrelu, &dlrelu);
-    layerErrors[NN->numHiddenLayer-1] = matrixHadaMul(dCost, dLrelu); // output layer error
+    // Matrix* dCost = matrixSub(NN->layers[NN->numHiddenLayer-1]->activations, observed);
+    // Matrix* dLrelu = copyMatrix(NN->layers[NN->numHiddenLayer-1]->z);
+    // matrixApply(dLrelu, &dlrelu);
+    // layerErrors[NN->numHiddenLayer-1] = matrixHadaMul(dCost, dLrelu); // output layer error
+    Matrix* dL = matrixSub(NN->outputs, observed);
+    layerErrors[NN->numHiddenLayer-1] = dL;
 
     deleteMatrix(observed);
-    deleteMatrix(dCost);
-    deleteMatrix(dLrelu);
+    deleteMatrix(dL);
+    // deleteMatrix(dCost);
+    // deleteMatrix(dLrelu);
 
     // Back propogate
     for (int l = NN->numHiddenLayer-2; l >= 0; l--)
