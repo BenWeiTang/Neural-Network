@@ -78,6 +78,27 @@ void feedForward(NeuralNetwork* NN, double* inputs)
         deleteMatrix(zPreBias);
     }
     deleteMatrix(NN->outputs);
+    NN->outputs = softMax(NN->layers[NN->numHiddenLayer-1]->activations);
+}
+
+void predict(NeuralNetwork* NN, double* inputs)
+{
+    for (int i = 0; i < NN->numInput; i++)
+    {
+        NN->inputs->data[i][0] = inputs[i];
+    }
+
+    for (int i = 0; i < NN->numHiddenLayer; i++)
+    {
+        deleteMatrix(NN->layers[i]->activations);
+        deleteMatrix(NN->layers[i]->z);
+        Matrix* zPreBias = matrixMul(NN->layers[i]->w, i == 0 ? NN->inputs : NN->layers[i-1]->activations);
+        NN->layers[i]->z = matrixAdd(zPreBias, NN->layers[i]->bias);
+        NN->layers[i]->activations = copyMatrix(NN->layers[i]->z);
+        matrixApply(NN->layers[i]->activations, &lrelu);
+        deleteMatrix(zPreBias);
+    }
+    deleteMatrix(NN->outputs);
     NN->outputs = argMax(NN->layers[NN->numHiddenLayer-1]->activations);
 }
 

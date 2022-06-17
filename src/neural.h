@@ -27,6 +27,7 @@ NeuralNetwork* makeNeuralNetwork(int* config, int configLen);
 void deleteLayer(Layer* layer);
 void deleteNeuralNetwork(NeuralNetwork* NN);
 void feedForward(NeuralNetwork* NN, double* inputs);
+void predict(NeuralNetwork* NN, double* inputs);
 void backPropogate(NeuralNetwork* NN, double* inputs, double* observedValues);
 
 #endif

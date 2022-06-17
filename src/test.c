@@ -10,7 +10,7 @@ void testAll(NeuralNetwork* NN)
 
     for (int i = 0; i < 10000; i++)
     {
-        feedForward(NN, images[i]->data);
+        predict(NN, images[i]->data);
         int predicted = -1;
         for (int j = 0; j < NN->numOutput; j++)
         {
@@ -37,7 +37,7 @@ void testRandom(NeuralNetwork* NN)
     srand((unsigned) time(&t));
 
     int rndIndex = rand() % 10000;
-    feedForward(NN, images[rndIndex]->data);
+    predict(NN, images[rndIndex]->data);
     int predicted = -1;
     for (int j = 0; j < NN->numOutput; j++)
     {
