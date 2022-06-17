@@ -15,11 +15,10 @@ typedef struct
 
 typedef struct
 {
-    int numInput, numOutput;
+    int numInput;
     int numHiddenLayer;
     Layer** layers;
     Matrix* inputs;
-    Matrix* outputs;
 } NeuralNetwork;
 
 Layer* makeLayer(int curNeuCount, int prevNeuCount);

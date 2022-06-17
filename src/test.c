@@ -12,9 +12,9 @@ void testAll(NeuralNetwork* NN)
     {
         predict(NN, images[i]->data);
         int predicted = -1;
-        for (int j = 0; j < NN->numOutput; j++)
+        for (int j = 0; j < NN->layers[NN->numHiddenLayer-1]->numNeuron; j++)
         {
-            if (NN->outputs->data[j][0] == 1)
+            if (NN->layers[NN->numHiddenLayer-1]->activations->data[j][0] == 1)
             {
                 predicted = j;
             }
@@ -39,9 +39,9 @@ void testRandom(NeuralNetwork* NN)
     int rndIndex = rand() % 10000;
     predict(NN, images[rndIndex]->data);
     int predicted = -1;
-    for (int j = 0; j < NN->numOutput; j++)
+    for (int j = 0; j < NN->layers[NN->numHiddenLayer-1]->numNeuron; j++)
     {
-        if (NN->outputs->data[j][0] == 1)
+        if (NN->layers[NN->numHiddenLayer-1]->activations->data[j][0] == 1)
         {
             predicted = j;
         }

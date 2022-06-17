@@ -21,11 +21,9 @@ NeuralNetwork* makeNeuralNetwork(int* config, int configLen)
 {
     NeuralNetwork* result = malloc(sizeof(NeuralNetwork));
     result->numInput = config[0];
-    result->numOutput = config[configLen-1]; // output will match last hidden layer
     result->numHiddenLayer = config[1];
     result->layers = malloc(sizeof(Layer*) * result->numHiddenLayer);
     result->inputs = makeMatrix(result->numInput, 1);
-    result->outputs = makeMatrix(result->numOutput, 1);
 
     // Starting from the 3rd element in config, specifies the num of neurons per layer
     for (int i = 2; i < configLen; i++)
@@ -55,7 +53,6 @@ void deleteNeuralNetwork(NeuralNetwork* NN)
     }
     free(NN->layers);
     free(NN->inputs);
-    free(NN->outputs);
     free(NN);
     NN = NULL;
 }
@@ -80,11 +77,13 @@ void feedForward(NeuralNetwork* NN, double* inputs)
         {
             matrixApply(NN->layers[i]->activations, &lrelu);
         }
+        else
+        {
+            NN->layers[NN->numHiddenLayer-1]->activations = softMax(NN->layers[NN->numHiddenLayer-1]->activations);
+        }
 
         deleteMatrix(zPreBias);
     }
-    deleteMatrix(NN->outputs);
-    NN->outputs = softMax(NN->layers[NN->numHiddenLayer-1]->activations);
 }
 
 void predict(NeuralNetwork* NN, double* inputs)
@@ -107,11 +106,13 @@ void predict(NeuralNetwork* NN, double* inputs)
         {
             matrixApply(NN->layers[i]->activations, &lrelu);
         }
+        else
+        {
+            NN->layers[NN->numHiddenLayer-1]->activations = argMax(NN->layers[NN->numHiddenLayer-1]->activations);
+        }
 
         deleteMatrix(zPreBias);
     }
-    deleteMatrix(NN->outputs);
-    NN->outputs = argMax(NN->layers[NN->numHiddenLayer-1]->activations);
 }
 
 void backPropogate(NeuralNetwork* NN, double* inputs, double* observedValues)
@@ -120,15 +121,15 @@ void backPropogate(NeuralNetwork* NN, double* inputs, double* observedValues)
     feedForward(NN, inputs);
 
     // Copy array into matrix
-    Matrix* observed = makeMatrix(NN->numOutput, 1);
-    for (int r = 0; r < NN->numOutput; r++)
+    Matrix* observed = makeMatrix(NN->layers[NN->numHiddenLayer-1]->numNeuron, 1);
+    for (int r = 0; r < NN->layers[NN->numHiddenLayer-1]->numNeuron; r++)
     {
         observed->data[r][0] = observedValues[r];
     }
 
     // Compute error of the output layer
     Matrix** layerErrors = malloc(sizeof(Matrix*) * NN->numHiddenLayer);
-    layerErrors[NN->numHiddenLayer-1] = matrixSub(NN->outputs, observed);
+    layerErrors[NN->numHiddenLayer-1] = matrixSub(NN->layers[NN->numHiddenLayer-1]->activations, observed);
 
     deleteMatrix(observed);
 
