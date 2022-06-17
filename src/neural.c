@@ -78,7 +78,6 @@ void feedForward(NeuralNetwork* NN, double* inputs)
         deleteMatrix(zPreBias);
     }
     deleteMatrix(NN->outputs);
-    // NN->outputs = copyMatrix(NN->layers[NN->numHiddenLayer-1]->activations);
     NN->outputs = argMax(NN->layers[NN->numHiddenLayer-1]->activations);
 }
 
@@ -101,6 +100,10 @@ void backPropogate(NeuralNetwork* NN, double* inputs, double* observedValues)
     matrixApply(dLrelu, &dlrelu);
     layerErrors[NN->numHiddenLayer-1] = matrixHadaMul(dCost, dLrelu); // output layer error
 
+    deleteMatrix(observed);
+    deleteMatrix(dCost);
+    deleteMatrix(dLrelu);
+
     // Back propogate
     for (int l = NN->numHiddenLayer-2; l >= 0; l--)
     {
@@ -120,7 +123,6 @@ void backPropogate(NeuralNetwork* NN, double* inputs, double* observedValues)
     {
         Matrix* prevActT = matrixTranspose(l == 0 ? NN->inputs : NN->layers[l-1]->activations);
         Matrix* deltas = matrixMul(layerErrors[l], prevActT);
-        // printMatrix(layerErrors[l]);
         
         // In-place update to current layer's weights
         for (int r = 0; r < deltas->row; r++)
@@ -146,6 +148,4 @@ void backPropogate(NeuralNetwork* NN, double* inputs, double* observedValues)
         deleteMatrix(layerErrors[l]);
     }
     free(layerErrors);
-    deleteMatrix(dLrelu);
-    deleteMatrix(dCost);
 }
