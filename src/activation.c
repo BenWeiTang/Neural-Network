@@ -20,19 +20,6 @@ Matrix* softMax(Matrix* m)
     return result;
 }
 
-Matrix* dSoftMax(Matrix* m)
-{
-    Matrix* result = copyMatrix(m);
-    for (int r = 0; r < result->row; r++)
-    {
-        for (int c = 0; c < result->col; c++)
-        {
-            result->data[r][c] = m->data[r][c] * (1 - m->data[r][c]);
-        }
-    }
-    return result;
-}
-
 Matrix* argMax(Matrix* m)
 {
     if (m->col != 1)

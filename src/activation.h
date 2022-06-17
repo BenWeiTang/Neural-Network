@@ -12,7 +12,6 @@ static inline double dlrelu(double x) { return x > 0 ? 1 : 0.05; }
 static inline double toExp(double x) { return exp(x); }
 
 Matrix* softMax(Matrix* m);
-Matrix* dSoftMax(Matrix* m);
 Matrix* argMax(Matrix* m);
 
 #endif
