@@ -24,7 +24,7 @@ void testAll(NeuralNetwork* NN)
             correct++;
         }
     }
-    printf("Accuracy: %5.2f%% (%d/10000)\n", correct/10000.0, correct);
+    printf("Accuracy: %5.2f%% (%d/10000)\n", 100 * correct/10000.0, correct);
 
     deleteImages(images, 10000);
 }
