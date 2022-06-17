@@ -9,10 +9,7 @@ Matrix* softMax(Matrix* m)
     double factor = 0;
     for (int r = 0; r < result->row; r++)
     {
-        for (int c = 0; c < result->col; c++)
-        {
-            factor += result->data[r][c];
-        }
+        factor += result->data[r][0];
     }
     factor = 1 / factor;
 

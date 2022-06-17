@@ -74,7 +74,13 @@ void feedForward(NeuralNetwork* NN, double* inputs)
         Matrix* zPreBias = matrixMul(NN->layers[i]->w, i == 0 ? NN->inputs : NN->layers[i-1]->activations);
         NN->layers[i]->z = matrixAdd(zPreBias, NN->layers[i]->bias);
         NN->layers[i]->activations = copyMatrix(NN->layers[i]->z);
-        matrixApply(NN->layers[i]->activations, &lrelu);
+
+        // Activation func for last layer is reserved for softMax
+        if (i != NN->numHiddenLayer-1)
+        {
+            matrixApply(NN->layers[i]->activations, &lrelu);
+        }
+
         deleteMatrix(zPreBias);
     }
     deleteMatrix(NN->outputs);
@@ -95,7 +101,13 @@ void predict(NeuralNetwork* NN, double* inputs)
         Matrix* zPreBias = matrixMul(NN->layers[i]->w, i == 0 ? NN->inputs : NN->layers[i-1]->activations);
         NN->layers[i]->z = matrixAdd(zPreBias, NN->layers[i]->bias);
         NN->layers[i]->activations = copyMatrix(NN->layers[i]->z);
-        matrixApply(NN->layers[i]->activations, &lrelu);
+
+        // Activation func for last layer is reserved for argMax
+        if (i != NN->numHiddenLayer-1)
+        {
+            matrixApply(NN->layers[i]->activations, &lrelu);
+        }
+
         deleteMatrix(zPreBias);
     }
     deleteMatrix(NN->outputs);
@@ -116,17 +128,9 @@ void backPropogate(NeuralNetwork* NN, double* inputs, double* observedValues)
 
     // Compute error of the output layer
     Matrix** layerErrors = malloc(sizeof(Matrix*) * NN->numHiddenLayer);
-    // Matrix* dCost = matrixSub(NN->layers[NN->numHiddenLayer-1]->activations, observed);
-    // Matrix* dLrelu = copyMatrix(NN->layers[NN->numHiddenLayer-1]->z);
-    // matrixApply(dLrelu, &dlrelu);
-    // layerErrors[NN->numHiddenLayer-1] = matrixHadaMul(dCost, dLrelu); // output layer error
-    Matrix* dL = matrixSub(NN->outputs, observed);
-    layerErrors[NN->numHiddenLayer-1] = dL;
+    layerErrors[NN->numHiddenLayer-1] = matrixSub(NN->outputs, observed);
 
     deleteMatrix(observed);
-    deleteMatrix(dL);
-    // deleteMatrix(dCost);
-    // deleteMatrix(dLrelu);
 
     // Back propogate
     for (int l = NN->numHiddenLayer-2; l >= 0; l--)
