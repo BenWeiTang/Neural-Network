@@ -2,6 +2,8 @@
 ## Overview
 This solo project provides a configurable neural network written in C. The user can choose the number of input neurons, output neurons, number of hidden layers, and the number of neurons for each individual layers. The project was designed to use the MNIST handwritten digit training data. However, with some tweaks, the functionality can be expanded to use other training data that have been vectorized into normalized floating point variables.
 
+In this [post](https://medium.com/@bwtang/a-dummys-take-on-priming-self-taught-neural-network-from-scratch-in-c-f3660d1d6697), you can learn about my journey where I went from knowing nothing about neural networks to building this project.
+
 ## Configuring the Neural Network
 In `main.c`, you can see the configuration is done with an int array `config`. The first element specifies the number of input neurons, the second specifies the number of hidden layers, and the rest tell the number of nerons for each layer. **Note that the last hidden layer is considered the output layer.**
 
